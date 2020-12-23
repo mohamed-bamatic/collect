@@ -7,6 +7,7 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 
+
 import org.apache.commons.io.IOUtils;
 import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.storage.StorageSubdirectory;
@@ -23,8 +24,7 @@ import timber.log.Timber;
 public class ContentUriProvider {
     private static final String HUAWEI_MANUFACTURER = "Huawei";
 
-    private ContentUriProvider() {
-    }
+    private ContentUriProvider() {}
 
     // https://stackoverflow.com/a/41309223/5479029
     public static Uri getUriForFile(@NonNull Context context, @NonNull String authority, @NonNull File file) {
