@@ -45,6 +45,7 @@ import org.odk.collect.android.configure.SettingsImporter;
 import org.odk.collect.android.configure.legacy.LegacySettingsFileImporter;
 import org.odk.collect.android.configure.qr.QRCodeTabsActivity;
 import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.databinding.MainMenuBinding;
 import org.odk.collect.android.gdrive.GoogleDriveActivity;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.preferences.AdminKeys;
@@ -88,6 +89,8 @@ import static org.odk.collect.android.utilities.DialogUtils.showIfNotShowing;
  */
 public class MainMenuActivity extends CollectAbstractActivity implements AdminPasswordDialogFragment.AdminPasswordDialogCallback {
     private static final boolean EXIT = true;
+    // view binding
+    private MainMenuBinding binding;
     // buttons
     private Button manageFilesButton;
     private Button sendDataButton;
@@ -137,7 +140,9 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Collect.getInstance().getComponent().inject(this);
-        setContentView(R.layout.main_menu);
+        binding = MainMenuBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+//        setContentView(R.layout.main_menu);
         ButterKnife.bind(this);
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainMenuViewModel.class);
 
@@ -147,7 +152,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         storageMigrationRepository.getResult().observe(this, this::onStorageMigrationFinish);
 
         // enter data button. expects a result.
-        Button enterDataButton = findViewById(R.id.enter_data);
+        Button enterDataButton = binding.enterData; //findViewById(R.id.enter_data);
         enterDataButton.setText(getString(R.string.enter_data_button));
         enterDataButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -159,7 +164,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         });
 
         // review data button. expects a result.
-        reviewDataButton = findViewById(R.id.review_data);
+        reviewDataButton = binding.reviewData; //findViewById(R.id.review_data);
         reviewDataButton.setText(getString(R.string.review_data_button));
         reviewDataButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -172,7 +177,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         });
 
         // send data button. expects a result.
-        sendDataButton = findViewById(R.id.send_data);
+        sendDataButton = binding.sendData; //findViewById(R.id.send_data);
         sendDataButton.setText(getString(R.string.send_data_button));
         sendDataButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -184,7 +189,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         });
 
         //View sent forms
-        viewSentFormsButton = findViewById(R.id.view_sent_forms);
+        viewSentFormsButton = binding.viewSentForms;//findViewById(R.id.view_sent_forms);
         viewSentFormsButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -196,7 +201,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         });
 
         // manage forms button. no result expected.
-        getFormsButton = findViewById(R.id.get_forms);
+        getFormsButton = binding.getForms;//findViewById(R.id.get_forms);
         getFormsButton.setText(getString(R.string.get_forms));
         getFormsButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -223,7 +228,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         });
 
         // manage forms button. no result expected.
-        manageFilesButton = findViewById(R.id.manage_forms);
+        manageFilesButton = binding.manageForms;//findViewById(R.id.manage_forms);
         manageFilesButton.setText(getString(R.string.manage_files));
         manageFilesButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -302,6 +307,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
     public void onDestroy() {
         storageMigrationRepository.clearResult();
         super.onDestroy();
+        binding = null;
     }
 
     @Override
