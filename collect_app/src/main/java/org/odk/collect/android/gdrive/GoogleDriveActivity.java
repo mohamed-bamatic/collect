@@ -19,9 +19,6 @@
 package org.odk.collect.android.gdrive;
 
 import android.app.Activity;
-
-import androidx.appcompat.app.AlertDialog;
-
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -29,16 +26,16 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.services.drive.Drive;
@@ -47,6 +44,7 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormListActivity;
 import org.odk.collect.android.adapters.FileArrayAdapter;
 import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.databinding.GoogleDriveListBinding;
 import org.odk.collect.android.exception.MultipleFoldersFoundException;
 import org.odk.collect.android.forms.Form;
 import org.odk.collect.android.forms.FormsRepository;
@@ -130,6 +128,8 @@ public class GoogleDriveActivity extends FormListActivity implements View.OnClic
     @Inject
     FormsRepository formsRepository;
 
+
+    GoogleDriveListBinding binding;
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setTitle(getString(R.string.google_drive));
@@ -140,7 +140,8 @@ public class GoogleDriveActivity extends FormListActivity implements View.OnClic
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.google_drive_list);
+        binding = GoogleDriveListBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         DaggerUtils.getComponent(this).inject(this);
 
@@ -203,7 +204,7 @@ public class GoogleDriveActivity extends FormListActivity implements View.OnClic
             createAlertDialog(alertMsg);
         }
 
-        rootButton = findViewById(R.id.root_button);
+        rootButton = binding.rootButton;
         if (myDrive) {
             rootButton.setText(getString(R.string.go_shared));
         } else {
@@ -211,11 +212,11 @@ public class GoogleDriveActivity extends FormListActivity implements View.OnClic
         }
         rootButton.setOnClickListener(this);
 
-        backButton = findViewById(R.id.back_button);
+        backButton = binding.backButton;//findViewById(R.id.back_button);
         backButton.setEnabled(parentId != null);
         backButton.setOnClickListener(this);
 
-        downloadButton = findViewById(R.id.download_button);
+        downloadButton = binding.downloadButton;//findViewById(R.id.download_button);
         downloadButton.setOnClickListener(this);
 
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);

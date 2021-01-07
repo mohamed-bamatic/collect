@@ -33,7 +33,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -73,8 +73,6 @@ import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import timber.log.Timber;
 
 import static org.odk.collect.android.utilities.DialogUtils.getDialog;
@@ -108,14 +106,17 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
     private final IncomingHandler handler = new IncomingHandler(this);
     private final MyContentObserver contentObserver = new MyContentObserver();
 
+    private MaterialBanner storageMigrationBanner;
+    private TextView versionSHAView;
+
     @Inject
     public Analytics analytics;
 
-    @BindView(R.id.storageMigrationBanner)
-    MaterialBanner storageMigrationBanner;
-
-    @BindView(R.id.version_sha)
-    TextView versionSHAView;
+//    @BindView(R.id.storageMigrationBanner)
+//    MaterialBanner storageMigrationBanner;
+//
+//    @BindView(R.id.version_sha)
+//    TextView versionSHAView;
 
     @Inject
     StorageMigrationRepository storageMigrationRepository;
@@ -143,8 +144,12 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         binding = MainMenuBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 //        setContentView(R.layout.main_menu);
-        ButterKnife.bind(this);
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainMenuViewModel.class);
+        storageMigrationBanner = binding.storageMigrationBanner;
+        versionSHAView = binding.versionSha;
+//        ButterKnife.bind(this);
+
+        viewModel = new ViewModelProvider(this, viewModelFactory).get(MainMenuViewModel.class);
+//        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainMenuViewModel.class);
 
         initToolbar();
         DaggerUtils.getComponent(this).inject(this);
